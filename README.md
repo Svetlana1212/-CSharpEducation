@@ -1,2 +1,2 @@
-# -CSharpEducation
+# CSharpEducation
 Домашние задания
