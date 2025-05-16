@@ -7,7 +7,7 @@ class TicTacToe
     const int O = 2;//нолики
     static int currentPlayer = 1; 
     static int numberOfMoves;
-    static int n;
+    static int n = 3;
     static int currentPosition;
     static bool validSize;
     static bool validInput;
@@ -167,16 +167,6 @@ class TicTacToe
     {
         numberOfMoves = 0;
         currentPosition = 0;
-        do
-        {
-            Console.WriteLine("Введите размер игрового поля (от 3 до 15):");
-            validSize = int.TryParse(Console.ReadLine(), out n) && n >= 3 && n <= 15;
-
-            if (!validSize)
-            {
-                Console.WriteLine("Некорректный ввод");
-            }
-        } while (validSize == false);
         Array.Resize(ref board, n * n);
         for (int i = 0; i < n * n; i++)
         {
@@ -187,7 +177,6 @@ class TicTacToe
         {
             Console.Clear();
             DrawBoard();
-
             do
             {
                 Console.WriteLine($"Игрок {currentPlayer}, введите номер ячейки:");
