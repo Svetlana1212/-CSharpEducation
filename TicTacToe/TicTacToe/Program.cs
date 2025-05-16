@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System;
+using System.Diagnostics.Metrics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 class TicTacToe
