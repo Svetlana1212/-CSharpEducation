@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
 class TicTacToe
 {
     const int X = 1;//крестики
