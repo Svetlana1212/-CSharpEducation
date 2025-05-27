@@ -12,7 +12,8 @@ namespace PhonebookLibrary
 {
     public class Phonebook
     {
-        public static void ReadBook(List<Abonent> collection, string path = "phonebook.txt")
+        public static string path = "phonebook.txt";
+        public static void ReadBook(List<Abonent> collection)
         {
 
             string[] lines = File.ReadAllLines(path);
@@ -71,7 +72,7 @@ namespace PhonebookLibrary
                 Console.WriteLine("Такой абонент не найден");
             }
         }
-        public static bool WriteDown(List<Abonent> data,string path= "phonebook.txt")
+        public static bool WriteDown(List<Abonent> data)
         {
             using StreamWriter sw = File.CreateText(path);
             foreach (var item in data)

@@ -12,9 +12,8 @@ namespace PhonebookAbonent
     {
         static void Main(string[] args)
         {
-            List <Abonent> abonents = new List <Abonent>();
-            string path = "phonebook.txt";
-            if (!File.Exists(path))
+            List <Abonent> abonents = new List <Abonent>();            
+            if (!File.Exists(Phonebook.path))
             {
                 Phonebook.WriteDown(abonents);
             }            
