@@ -13,7 +13,8 @@ namespace PhonebookLibrary
     public class Phonebook
     {
         public static string path = "phonebook.txt";
-        public static void ReadBook(List<Abonent> collection)
+        public static List<Abonent> abonents = new List<Abonent>();
+        public static void ReadBook()
         {
 
             string[] lines = File.ReadAllLines(path);
@@ -23,14 +24,14 @@ namespace PhonebookLibrary
                 {
                     Abonent abonent = new Abonent(lines[i], lines[i + 1]);
                     abonent.Description = lines[i + 2];
-                    collection.Add(abonent);
+                    abonents.Add(abonent);
                 }
             }
         }
-        public static bool Add(Abonent abonent, List<Abonent> collection)
+        public static bool Add(Abonent abonent)
         {
-            Abonent found = collection.Find(item => item.Phone == abonent.Phone);
-            Abonent found1 = collection.Find(item => item.Name == abonent.Name);
+            Abonent found = abonents.Find(item => item.Phone == abonent.Phone);
+            Abonent found1 = abonents.Find(item => item.Name == abonent.Name);
             if (found != null)
             {
                 Console.WriteLine("абонент c таким номером телефона уже существует");
@@ -43,26 +44,26 @@ namespace PhonebookLibrary
             }
             else
             {
-                collection.Add(abonent);
+                abonents.Add(abonent);
                 return true;
             }
             
         }
-        public static bool Delete(string name, List<Abonent> collection)
+        public static bool Delete(string name)
         {
-            var obj = collection.FirstOrDefault(item => item.Name == name);
+            var obj = abonents.FirstOrDefault(item => item.Name == name);
             if (obj != null)
             {
-                int index = collection.IndexOf(obj);
-                collection.RemoveAt(index);
+                int index = abonents.IndexOf(obj);
+                abonents.RemoveAt(index);
                 return true;
             }
             return false;
             
         }
-        public static void Search(List<Abonent> collection, string phone=null, string name=null)
+        public static void Search(string phone=null, string name=null)
         {            
-            Abonent found =(phone!=null) ? (collection.Find(item => item.Phone == phone)): (collection.Find(item => item.Name == name));           
+            Abonent found =(phone!=null) ? (abonents.Find(item => item.Phone == phone)): (abonents.Find(item => item.Name == name));           
             if (found!=null)
             {
                 Console.WriteLine("Имя:{0}, Телефон:{1}, Дополнительная информация:{2}", found.Name, found.Phone, (found.Description!="")? found.Description:"отсутствует");
@@ -72,10 +73,10 @@ namespace PhonebookLibrary
                 Console.WriteLine("Такой абонент не найден");
             }
         }
-        public static bool WriteDown(List<Abonent> data)
+        public static bool WriteDown()
         {
             using StreamWriter sw = File.CreateText(path);
-            foreach (var item in data)
+            foreach (var item in abonents)
             {
                 sw.WriteLine(item.Name);
                 sw.WriteLine(item.Phone);

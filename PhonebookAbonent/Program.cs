@@ -11,13 +11,12 @@ namespace PhonebookAbonent
     internal class Program
     {
         static void Main(string[] args)
-        {
-            List <Abonent> abonents = new List <Abonent>();            
+        {                     
             if (!File.Exists(Phonebook.path))
             {
-                Phonebook.WriteDown(abonents);
+                Phonebook.WriteDown();
             }            
-            Phonebook.ReadBook(abonents);            
+            Phonebook.ReadBook();            
                         
             do
             {
@@ -38,43 +37,43 @@ namespace PhonebookAbonent
                     Abonent abonent = new Abonent(name, phone);
                     Console.WriteLine("Введите дополнительную информацию или нажмите Enter");
                     abonent.Description = Console.ReadLine();
-                    if(Phonebook.Add(abonent, abonents)&& Phonebook.WriteDown(abonents)) 
+                    if(Phonebook.Add(abonent)&& Phonebook.WriteDown()) 
                     {
                         Console.WriteLine("Абонент записан в телефонную книгу");
                     }
-                    abonents.Clear();
-                    Phonebook.ReadBook(abonents);                    
+                    Phonebook.abonents.Clear();
+                    Phonebook.ReadBook();                    
                 }
                 else if (number == 2)
                 {
                     Console.WriteLine("Введите имя абонента");
                     string name = Console.ReadLine();
-                    if(Phonebook.Delete(name, abonents) && Phonebook.WriteDown(abonents))
+                    if(Phonebook.Delete(name) && Phonebook.WriteDown())
                     {
                         Console.WriteLine("Абонент успешно удален из телефонной книги");
                     }
-                    abonents.Clear();
-                    Phonebook.ReadBook(abonents);
+                    Phonebook.abonents.Clear();
+                    Phonebook.ReadBook();
                 }
                 else if (number == 3)
                 {   
                     Console.WriteLine("Введите телефон абонента");
                     string phone = Console.ReadLine();
-                    Phonebook.Search(abonents, phone);
+                    Phonebook.Search(phone);
                     
                 }
                 else if (number == 4)
                 {
                     Console.WriteLine("Введите имя абонента");
                     string name = Console.ReadLine();
-                    Phonebook.Search(abonents, null, name);
+                    Phonebook.Search(null, name);
                 }
                 else if (number == 5)
                 {
-                    for (int i = 0; i < abonents.Count; i++)
+                    for (int i = 0; i < Phonebook.abonents.Count; i++)
                     {
-                        Console.WriteLine(abonents[i].Name);
-                        Console.WriteLine(abonents[i].Phone);
+                        Console.WriteLine(Phonebook.abonents[i].Name);
+                        Console.WriteLine(Phonebook.abonents[i].Phone);
                     }
                 }
                 else if (number == 6)
