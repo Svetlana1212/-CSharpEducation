@@ -6,8 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TaskManagerUp\TaskManagerUp.csproj" />
-  </ItemGroup>
+  
 
 </Project>
