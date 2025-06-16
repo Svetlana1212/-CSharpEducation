@@ -35,10 +35,10 @@ namespace ClassTaskManager
         {
             return true;
         }
-        /*public static bool Filter(string filter)
+        public static bool Filter(string filter)
         {
             return true;
-        }*/
+        }
         public static bool Update(Task task)
         {
             return true;
@@ -67,6 +67,17 @@ namespace ClassTaskManager
         {
             return true;
         }
-
+        public static bool WriteDown(List<Task> tasks)
+        {
+            using StreamWriter sw = File.CreateText(path);
+            foreach (var item in data)
+            {
+                sw.WriteLine($"Id: {item.Id}");
+                sw.WriteLine($"Name: {item.Name}");
+                sw.WriteLine(item.Phone);
+                sw.WriteLine(item.Description);
+            }
+            return true;
+        }
     }
 }
