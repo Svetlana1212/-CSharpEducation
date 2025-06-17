@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassTaskManager
 {
-    public class Task
+    public class WorkTask
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,8 +15,8 @@ namespace ClassTaskManager
         public DateTime СreationDate { get; set; }        
         public string Status { get; set; }
         public string Priority { get; set; }
-        public List<User> Responsible {  get; set; }
-        public Task(int Id, string name, string description, DateTime deadline) 
+        public List<User> Responsible = new List<User>();
+        public WorkTask(int Id, string name, string description, DateTime deadline) 
         {
             this.Id = Id;
             this.Name = name;

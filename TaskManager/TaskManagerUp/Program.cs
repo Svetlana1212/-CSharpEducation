@@ -1,4 +1,6 @@
-﻿using ClassTaskManager;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using ClassTaskManager;
 
 namespace TaskManagerUp
 {
@@ -15,10 +17,35 @@ namespace TaskManagerUp
                 string name=Console.ReadLine();
                 Console.WriteLine("Введите email");
                 string email=Console.ReadLine();
-                User CurrentUser = UserManager.Search(name, email);
+                User Ivan = new User("Иван", "Иванов", "email");
+                WorkTask task1 = new WorkTask(1, "Задача1", "Очень трудная", DateTime.Today);
+                Console.WriteLine(task1.Id);
+                task1.Responsible.Add(Ivan);
+                TaskManager.tasks.Add(task1);
+                TaskManager.WriteDown();
+                string str = "0, Иван,Иванов,email|";
+                string[] lUser = str.Split("|");
+                foreach (string item in lUser)
+                {
+                    string[] linUser = item.Split(",");
+                    int n = linUser.Length;
+                    //Console.WriteLine(linUser[n-2]);
+                    User user1 = new User(linUser[n-3], linUser[n-2], linUser[n-1]);
+                    user1.Id = Int32.Parse(linUser[n-4]);
+                    Console.WriteLine(user1.Email);
+
+                }
+                 string[] linesUser = lUser[0].Split(",");
+                User user = new User(linesUser[1], linesUser[2], linesUser[3]);
+                //TaskManager.Read();
+                //WorkTask myTask=TaskManager.tasks[0];
+                
+                User CurrentUser = user;//UserManager.Search(name, email);
+                
+                
                 if (CurrentUser!=null&& CurrentUser.Role!="admin") 
                 {
-                    
+                    TaskManager.Read();
                     Console.WriteLine(@"1. Мои задачи
                                         2. Свободные задачи
                                         3. Найти задачу");
@@ -32,6 +59,7 @@ namespace TaskManagerUp
                     }
                 }else if (CurrentUser.Role == "admin")
                 {
+                    TaskManager.Read();
                     Console.WriteLine(@"1. Список задач
                                         2. Свободные задачи
                                         3. Найти все задачи пользователя
