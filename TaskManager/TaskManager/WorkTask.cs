@@ -16,9 +16,8 @@ namespace ClassTaskManager
         public string Status { get; set; }
         public string Priority { get; set; }
         public List<User> Responsible = new List<User>();
-        public WorkTask(int Id, string name, string description, DateTime deadline) 
+        public WorkTask(string name, string description, DateTime deadline) 
         {
-            this.Id = Id;
             this.Name = name;
             this.Description = description;
             this.Deadline = deadline;
