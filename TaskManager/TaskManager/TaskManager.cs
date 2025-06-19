@@ -84,6 +84,23 @@ namespace ClassTaskManager
             
             return myTasks;
         }
+        public static void ListOutput(List<WorkTask> workTasks)
+        {
+            foreach (WorkTask task in workTasks)
+            {
+                Console.WriteLine(task.Name);
+                Console.WriteLine(task.Description);
+                Console.WriteLine($"Срок выполнения: {task.Deadline}");
+                Console.WriteLine(task.Status);
+                Console.WriteLine(task.Priority);
+                foreach (User item in task.Responsible)
+                {
+                    Console.Write($"{item.Name}");
+                    Console.Write($" {item.Surname}");
+                    Console.WriteLine();
+                }
+            }
+        }
         public static void TaskInfo(WorkTask task)
         {
             Console.WriteLine(task.Id);
@@ -91,8 +108,8 @@ namespace ClassTaskManager
             Console.WriteLine(task.Description);
             Console.WriteLine($"Срок выолнения: {task.Deadline}"); 
             Console.WriteLine($"Дата создания: {task.СreationDate}");
-            Console.WriteLine($"Номер: { task.Status}");        
-            Console.WriteLine(task.Priority);
+            Console.WriteLine($"Статус: { task.Status}");
+            Console.WriteLine($"Приоритет: {task.Priority}");
             foreach(User item in task.Responsible)
             {
                 Console.Write($"{item.Name}");                
@@ -113,8 +130,10 @@ namespace ClassTaskManager
         {
             return true;
         }*/
-        public static bool Sort(string sort, string sortingDirection)
+        public static bool Sort(List<WorkTask> works)//string sort, string sortingDirection)
         {
+            works.Sort((task1, task2) => task1.Deadline.CompareTo(task2.Deadline));
+            // Сортировка по возрасту 
             return true;
         }
         public static List<WorkTask> Filter(string condition,string meaning)
