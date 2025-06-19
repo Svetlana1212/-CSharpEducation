@@ -25,7 +25,7 @@ namespace TaskManagerUp
                 DateTime date = new DateTime(2023, 3, 11, 10, 30, 0);
                 DateTime date1 = new DateTime(2025, 9, 11, 10, 30, 0);
                 DateTime date2 = new DateTime(2025, 8, 15, 12, 20, 0);
-                WorkTask task1 = new WorkTask("Задача1", "это первая очень трудная задача", date);
+                WorkTask task1 = new WorkTask("Создать задачи", "это первая очень трудная задача", date);
                 task1.Id = 1;
                 task1.Status = "Назначен ответственный";
                 task1.Priority = "средняя";
@@ -107,7 +107,7 @@ namespace TaskManagerUp
                     if (n == 1)
                     {
                         List<WorkTask> works = TaskManager.List(CurrentUser);
-                        TaskManager.Sort(works);
+                        TaskManager.Sort(works, "Priority");
                         TaskManager.ListOutput(works);
                     }
                 }

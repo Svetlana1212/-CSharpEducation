@@ -130,10 +130,24 @@ namespace ClassTaskManager
         {
             return true;
         }*/
-        public static bool Sort(List<WorkTask> works)//string sort, string sortingDirection)
+        public static bool Sort(List<WorkTask> works, string sort)
         {
-            works.Sort((task1, task2) => task1.Deadline.CompareTo(task2.Deadline));
-            // Сортировка по возрасту 
+            if(sort=="Name")
+                works.Sort((task1, task2) => task1.Name.CompareTo(task2.Name));
+            else if (sort == "Description")
+                works.Sort((task1, task2) => task1.Description.CompareTo(task2.Description));
+            else if(sort == "Deadline")
+                works.Sort((task1, task2) => task1.Deadline.CompareTo(task2.Deadline));
+            else if (sort == "СreationDate")
+                works.Sort((task1, task2) => task1.СreationDate.CompareTo(task2.СreationDate));
+            else if(sort == "Priority")
+                works.Sort((task1, task2) => task1.Priority.CompareTo(task2.Priority));
+            else if(sort == "Status")
+                works.Sort((task1, task2) => task1.Status.CompareTo(task2.Status));            
+            else
+            {
+                return false;
+            }
             return true;
         }
         public static List<WorkTask> Filter(string condition,string meaning)
