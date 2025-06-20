@@ -10,17 +10,19 @@ namespace ClassTaskManager
     public class TaskManager: DataСollectionInterface
     {
         public static string path = "task.txt";
+        public static string reportPath = "report.txt";
+        
         public static List<WorkTask> tasks = new List<WorkTask>();
         public static int WorkTaskId = tasks.Count + 1;
 
-        public static void СheckingTheDeadline(WorkTask myTask)
+       /* public static void СheckingTheDeadline(WorkTask myTask)
         {
             if (DateTime.Compare(myTask.Deadline, DateTime.Now) < 0)
             {
                 myTask.Status = "Просрочено";
 
             }
-        }
+        }*/
         public static bool Read ()
         {
             string[] lines = File.ReadAllLines(path);
@@ -64,7 +66,7 @@ namespace ClassTaskManager
             List<WorkTask> myTasks = new List<WorkTask>();
             foreach (WorkTask task in tasks)
             {
-                СheckingTheDeadline(task);
+               // СheckingTheDeadline(task);
                 if (user.Role == "admin")
                 {      
                     myTasks.Add(task);
@@ -150,11 +152,11 @@ namespace ClassTaskManager
             }
             return true;
         }
-        public static List<WorkTask> Filter(string condition,string meaning)
+        public static List<WorkTask> Filter(List<WorkTask> works, string condition,string meaning)
         {
             List<WorkTask> filtrTask = new List<WorkTask>();
            
-            foreach (WorkTask task in tasks)
+            foreach (WorkTask task in works)
             {
 
                 bool filter=false;
@@ -179,7 +181,7 @@ namespace ClassTaskManager
                 }
                 else
                 {
-                    Console.WriteLine("Некорректные условия поиска");
+                    Console.WriteLine("Некорректные условия фильтрации");
                 }
                 if (filter)
                 {
@@ -189,14 +191,15 @@ namespace ClassTaskManager
             
             return filtrTask;
         }
-        public static bool Update(WorkTask task)
+        public static bool Update(WorkTask task, DateTime deadline, string name=null, string description = null, string status = null)
         {
+            task.Deadline = deadline;
+            task.Name = name;
+            task.Description = description;
+            task.Status = status;
             return true;
         }
-        /*public static bool Delete(WorkTask task) 
-        {
-            return true;
-        }*/
+        
         /*public static bool AddComment (WorkTask task, string comment)
         {
             return true;
@@ -207,34 +210,32 @@ namespace ClassTaskManager
         }*/
         public static bool SendMessage(string email)
         {
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                Credentials = new NetworkCredential("yourusername@gmail.com", "yourpassword"),
-                EnableSsl = true
-            };
+            // Отправитель и получатель:  
+            MailAddress from = new MailAddress("somemail@gmail.com", "Tom");
+            MailAddress to = new MailAddress(email);
 
-            MailMessage message = new MailMessage
-            {
-                From = new MailAddress("yourusername@gmail.com"),
-                Subject = "Тестовое сообщение",
-                Body = "Это тело тестового сообщения."
-            };
-            message.To.Add(email);
+            // Создание объекта сообщения:  
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Тест";
+            m.Body = "<h2>Письмо-тест работы smtp-клиента</h2>";
+            m.IsBodyHtml = true;
+
+            // Адрес SMTP-сервера и порт:  
+            SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 465);
+            smtp.Credentials = new NetworkCredential("pl.swetik@yandex.ru", "Sos197sos");
+            smtp.EnableSsl = true;
+            smtp.Send(m);
 
             try
             {
-                client.Send(message);
+                smtp.Send(m);
                 Console.WriteLine("Письмо отправлено!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Ошибка при отправке письма: " + ex.Message);
             }
-            finally
-            {
-                message.Dispose();
-                client.Dispose();
-            }
+            
             return true;
         }
         
@@ -242,12 +243,41 @@ namespace ClassTaskManager
         {
             task.Responsible.Add(user);
             task.Status = "назначен ответственный";
-           // SendMessage(user.Email);
+            SendMessage(user.Email);
             return true;
         }
-        
+        public static bool DelAllResponsible(WorkTask task)
+        {
+            task.Responsible.Clear();
+            task.Status = "Свободная";            
+            return true;
+        }
+
         public static bool GenerateAReport()
         {
+            using StreamWriter sw = File.CreateText(reportPath);
+            foreach (var item in tasks)
+            {
+                sw.Write($"Номер задачи: {item.Id}");
+                sw.Write($" Название: {item.Name}");
+                sw.Write($" Описание: {item.Description}");
+                sw.Write($" Дедлайн: {item.Deadline}");
+                sw.Write($" Дата создания: {item.СreationDate}");
+                sw.Write($" Текущий статус: {item.Status}");
+                sw.Write($" Приоритет: {item.Priority}");
+                if (item.Responsible.Count != 0)
+                {
+                    foreach (User user in item.Responsible)
+                    {
+                        sw.Write($" Ответственные: {user.Id}, {user.Name},{user.Surname},{user.Email}\n");
+                    }
+                }
+                else
+                {
+                    sw.WriteLine("ответственный не назначен");
+                }
+
+            }
             return true;
         }
         public static bool WriteDown()

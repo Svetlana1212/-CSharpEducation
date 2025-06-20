@@ -12,8 +12,20 @@ namespace ClassTaskManager
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
-        public DateTime СreationDate { get; set; }        
-        public string Status { get; set; }
+        public DateTime СreationDate { get; set; }
+        private string status = "В работе";
+        public string Status 
+        {
+            get
+            {
+                return status;
+            }
+            set
+            {
+                if (DateTime.Today > Deadline)
+                    status = "Просрочена";
+            }
+        }
         public string Priority { get; set; }
         public List<User> Responsible = new List<User>();
         public WorkTask(string name, string description, DateTime deadline) 
