@@ -1,72 +1,60 @@
 ﻿using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace ClassTaskManager
 {
     public class TaskManager: DataСollectionInterface
     {
-        public static string path = "task.txt";
-        public static List<Task> tasks = new List<Task>();
-        
-        public static void Read ()
+        public static bool AddTask()
         {
-            string[] lines = File.ReadAllLines(path);
-            if (lines.Length > 1)
+            Console.Write("Введите название задачи: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Введите описание задачи: ");
+            string description = Console.ReadLine();
+
+            Console.Write("Введите срок выполнения задачи (ДД.ММ.ГГГГ): ");
+            DateTime deadline = Convert.ToDateTime(Console.ReadLine());
+
+            Console.Write("Укажите приоритет ('Обычный' / 'Срочный'): ");
+            string priority = Console.ReadLine();
+
+            WorkTask newWorkTask = new WorkTask(name, description, deadline)
             {
-                for (int i = 0; i < lines.Length; i = i + 3)
-                {
-                    Task task = new Task(lines[i], lines[i + 1], lines[i+2]);
-                    tasks.Add(task);
-                }
+                Id = tasks.Count + 1,
+                СreationDate = DateTime.Today                
+            };
+
+            tasks.Add(newWorkTask);
+            Console.WriteLine($"Задача успешно поставлена!");
+            return true;
+        }
+
+        public static WorkTask SearchTask(string name)
+        {
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                if (tasks[i].Name == name)
+                    return tasks[i];
             }
+                        
         }
-        public static void List(int Id)
+        public static bool DeleteTask(int id, WorkTask task)
         {
-
+            Console.Write("Введите номер задачи: ");
+            var userImput = Console.ReadLine();
+            id = Convert.ToInt32(userImput);
+            if (id > tasks.Count)
+            {
+                return false;
+            }
+            else
+            {
+                tasks.Remove(task);
+                return true;
+            }
+                
         }
-        public static bool Add(Task task)
-        {
-            return true;
-        }
-        public static bool Search(Task task) 
-        {
-            return true;
-        }
-        public static bool Sort(string sort)
-        {
-            return true;
-        }
-        /*public static bool Filter(string filter)
-        {
-            return true;
-        }*/
-        public static bool Update(Task task)
-        {
-            return true;
-        }
-        public static bool Delete(Task task) 
-        {
-            return true;
-        }
-        public static bool AddComment (Task task, string comment)
-        {
-            return true;
-        }
-        public static bool DeleteComment(Task task, string comment)
-        {
-            return true;
-        }
-        public static bool AddResponsible(Task task, User user)
-        {
-            return true;
-        }
-        public static bool SendMessage()
-        {
-            return true;
-        }
-        public static bool GenerateAReport()
-        {
-            return true;
-        }
-
+        
     }
 }
