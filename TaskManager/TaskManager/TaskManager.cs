@@ -1,29 +1,10 @@
 ﻿using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace ClassTaskManager
 {
     public class TaskManager: DataСollectionInterface
     {
-        public static string path = "task.txt";
-        public static List<WorkTask> tasks = new List<WorkTask>();
-        
-        public static void Read ()
-        {
-            string[] lines = File.ReadAllLines(path);
-            if (lines.Length > 1)
-            {
-                for (int i = 0; i < lines.Length; i = i + 3)
-                {
-                    WorkTask task = new WorkTask(lines[i], lines[i + 1], lines[i+2]);
-                    tasks.Add(task);
-                }
-            }
-        }
-        public static void List(int Id)
-        {
-
-        }
-
         public static bool AddTask()
         {
             Console.Write("Введите название задачи: ");
@@ -38,7 +19,7 @@ namespace ClassTaskManager
             Console.Write("Укажите приоритет ('Обычный' / 'Срочный'): ");
             string priority = Console.ReadLine();
 
-            WorkTask newWorkTask = new WorkTask(name, description, deadline, priority)
+            WorkTask newWorkTask = new WorkTask(name, description, deadline)
             {
                 Id = tasks.Count + 1,
                 СreationDate = DateTime.Today                
@@ -49,28 +30,14 @@ namespace ClassTaskManager
             return true;
         }
 
-        public static bool SearchTask(WorkTask task) 
+        public static WorkTask SearchTask(string name)
         {
-            Console.Write("Введите название задачи: ");
-            string name = Console.ReadLine();
             for (int i = 0; i < tasks.Count; i++)
             {
-                if (tasks[i].Name == name);
-                    return true;
+                if (tasks[i].Name == name)
+                    return tasks[i];
             }
-            return false;
-        }
-        public static bool Sort(string sort)
-        {
-            return true;
-        }
-        /*public static bool Filter(string filter)
-        {
-            return true;
-        }*/
-        public static bool Update(WorkTask task)
-        {
-            return true;
+                        
         }
         public static bool DeleteTask(int id, WorkTask task)
         {
@@ -88,26 +55,6 @@ namespace ClassTaskManager
             }
                 
         }
-        public static bool AddComment (WorkTask task, string comment)
-        {
-            return true;
-        }
-        public static bool DeleteComment(WorkTask task, string comment)
-        {
-            return true;
-        }
-        public static bool AddResponsible(WorkTask task, User user)
-        {
-            return true;
-        }
-        public static bool SendMessage()
-        {
-            return true;
-        }
-        public static bool GenerateAReport()
-        {
-            return true;
-        }
-
+        
     }
 }
