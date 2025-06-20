@@ -8,8 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassTaskManager\ClassTaskManager.csproj" />
     <ProjectReference Include="..\TaskManager\ClassTaskManager.csproj" />
   </ItemGroup>
+
+  
 
 </Project>
