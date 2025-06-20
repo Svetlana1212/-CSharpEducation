@@ -15,14 +15,7 @@ namespace ClassTaskManager
         public static List<WorkTask> tasks = new List<WorkTask>();
         public static int WorkTaskId = tasks.Count + 1;
 
-       /* public static void СheckingTheDeadline(WorkTask myTask)
-        {
-            if (DateTime.Compare(myTask.Deadline, DateTime.Now) < 0)
-            {
-                myTask.Status = "Просрочено";
-
-            }
-        }*/
+        
         public static bool Read ()
         {
             string[] lines = File.ReadAllLines(path);
@@ -36,25 +29,23 @@ namespace ClassTaskManager
                     task.СreationDate = DateTime.Parse(lines[i+4]);
                     task.Status = lines[i + 5];
                     task.Priority = lines[i + 6];
-                    if(lines[i + 7]!="ответственный не назначен")
+                    if (lines[i + 7] != "ответственный не назначен")
                     {
-
-                    }
-                    string [] Respons = lines[i + 7].Split("|");
-                    foreach (string item in Respons) 
-                    {
-                        string[] linUser=item.Split(",");
-                        if (linUser.Length > 1)
+                        string[] Respons = lines[i + 7].Split("|");
+                        foreach (string item in Respons)
                         {
-                            for (int n = 0; n < linUser.Length - 1; n = n + 3)
+                            string[] linUser = item.Split(",");
+                            if (linUser.Length > 1)
                             {
-                                User user = new User(linUser[n+1], linUser[n+2], linUser[n + 3]);
-                                user.Id = Int32.Parse(linUser[n]);
-                                task.Responsible.Add(user);
+                                for (int n = 0; n < linUser.Length - 1; n = n + 3)
+                                {
+                                    User user = new User(linUser[n + 1], linUser[n + 2], linUser[n + 3]);
+                                    user.Id = Int32.Parse(linUser[n]);
+                                    task.Responsible.Add(user);
+                                }
                             }
                         }
                     }
-                    
                     tasks.Add(task);
                 }
             }
@@ -66,7 +57,7 @@ namespace ClassTaskManager
             List<WorkTask> myTasks = new List<WorkTask>();
             foreach (WorkTask task in tasks)
             {
-               // СheckingTheDeadline(task);
+               
                 if (user.Role == "admin")
                 {      
                     myTasks.Add(task);
@@ -86,52 +77,20 @@ namespace ClassTaskManager
             
             return myTasks;
         }
-        public static void ListOutput(List<WorkTask> workTasks)
+        public static WorkTask SearchTask(string name)
         {
-            foreach (WorkTask task in workTasks)
-            {
-                Console.WriteLine(task.Name);
-                Console.WriteLine(task.Description);
-                Console.WriteLine($"Срок выполнения: {task.Deadline}");
-                Console.WriteLine(task.Status);
-                Console.WriteLine(task.Priority);
-                foreach (User item in task.Responsible)
-                {
-                    Console.Write($"{item.Name}");
-                    Console.Write($" {item.Surname}");
-                    Console.WriteLine();
-                }
-            }
+            return tasks[0];
         }
-        public static void TaskInfo(WorkTask task)
+        public static bool Update(WorkTask task, DateTime deadline, string name = null, string description = null, string status = null)
         {
-            Console.WriteLine(task.Id);
-            Console.WriteLine(task.Name);
-            Console.WriteLine(task.Description);
-            Console.WriteLine($"Срок выолнения: {task.Deadline}"); 
-            Console.WriteLine($"Дата создания: {task.СreationDate}");
-            Console.WriteLine($"Статус: { task.Status}");
-            Console.WriteLine($"Приоритет: {task.Priority}");
-            foreach(User item in task.Responsible)
-            {
-                Console.Write($"{item.Name}");                
-                Console.Write($" {item.Surname}");
-                Console.WriteLine();
-            }
-            /*foreach (string comment in comments)
-            {
-                Console.WriteLine(comment);
-            }*/
-
+            task.Deadline = deadline;
+            task.Name = name;
+            task.Description = description;
+            task.Status = status;
+            return true;
         }
-       /* public static bool Add(WorkTask task)
-        {
-            return true;
-        }*/
-        /*public static bool Search(WorkTask task) 
-        {
-            return true;
-        }*/
+        
+       
         public static bool Sort(List<WorkTask> works, string sort)
         {
             if(sort=="Name")
@@ -191,36 +150,41 @@ namespace ClassTaskManager
             
             return filtrTask;
         }
-        public static bool Update(WorkTask task, DateTime deadline, string name=null, string description = null, string status = null)
-        {
-            task.Deadline = deadline;
-            task.Name = name;
-            task.Description = description;
-            task.Status = status;
-            return true;
-        }
-        
-        /*public static bool AddComment (WorkTask task, string comment)
-        {
-            return true;
-        }
-        public static bool DeleteComment(WorkTask task, string comment)
-        {
-            return true;
-        }*/
-        public static bool SendMessage(string email)
-        {
-            // Отправитель и получатель:  
-            MailAddress from = new MailAddress("somemail@gmail.com", "Tom");
-            MailAddress to = new MailAddress(email);
 
-            // Создание объекта сообщения:  
+       /* public static void AddComment(WorkTask task, User user, string comment)
+        {
+            CommentManager.AddComment(task.Id, user, comment);
+        }
+
+        public static void ShowComments(WorkTask task)
+        {
+            CommentManager.ShowComments(task.Id, UserManager.users);
+        }
+
+
+        public static bool DeleteComment(int commentId, User currentUser)
+        {
+            return CommentManager.DeleteComment(commentId, currentUser);
+        }
+
+        public static bool EditComment(int commentId, User currentUser, string newText)
+        {
+            return CommentManager.EditComment(commentId, currentUser, newText);
+        }*/
+
+        public static bool SendMessage(WorkTask task, User user)
+        {
+             
+            MailAddress from = new MailAddress("somemail@gmail.com", "Tom");
+            MailAddress to = new MailAddress(user.Email);
+
+            
             MailMessage m = new MailMessage(from, to);
-            m.Subject = "Тест";
-            m.Body = "<h2>Письмо-тест работы smtp-клиента</h2>";
+            m.Subject = "Вас назначили ответственным за задачу";
+            m.Body = "<h2>Вас назначили ответственным на задачу</h2>"+task.Id+" "+task.Name;
             m.IsBodyHtml = true;
 
-            // Адрес SMTP-сервера и порт:  
+             
             SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 465);
             smtp.Credentials = new NetworkCredential("pl.swetik@yandex.ru", "Sos197sos");
             smtp.EnableSsl = true;
@@ -243,7 +207,7 @@ namespace ClassTaskManager
         {
             task.Responsible.Add(user);
             task.Status = "назначен ответственный";
-            SendMessage(user.Email);
+            //SendMessage(task, user);
             return true;
         }
         public static bool DelAllResponsible(WorkTask task)
@@ -251,6 +215,52 @@ namespace ClassTaskManager
             task.Responsible.Clear();
             task.Status = "Свободная";            
             return true;
+        }
+        public static void ListOutput(List<WorkTask> workTasks)
+        {
+            foreach (WorkTask task in workTasks)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{task.Name} ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Описание: {task.Description}");
+                Console.Write($"Срок выполнения: {task.Deadline} ");
+                Console.Write($"Статус: {task.Status} ");
+                Console.WriteLine($"Приоритет: {task.Priority}");
+                if (task.Status != "Cвободная")
+                {
+                    Console.Write("Ответственные: ");
+                    foreach (User item in task.Responsible)
+                    {
+                        Console.Write($" {item.Name}");
+                        Console.Write($" {item.Surname}  ");
+                    }
+                }
+                Console.WriteLine();
+
+                
+            }
+        }
+        public static void TaskInfo(WorkTask task)
+        {
+            Console.WriteLine($"Задача номер {task.Id}");
+            Console.WriteLine(task.Name);
+            Console.WriteLine(task.Description);
+            Console.WriteLine($"Срок выолнения: {task.Deadline}");
+            Console.WriteLine($"Дата создания: {task.СreationDate}");
+            Console.WriteLine($"Статус: {task.Status}");
+            Console.WriteLine($"Приоритет: {task.Priority}");
+            Console.Write("Ответственные:");
+            foreach (User item in task.Responsible)
+            {
+                Console.Write($" {item.Name}");
+                Console.Write($" {item.Surname}");                
+            }
+            /*foreach (string comment in comments)
+            {
+                Console.WriteLine(comment);
+            }*/
+
         }
 
         public static bool GenerateAReport()
@@ -296,8 +306,9 @@ namespace ClassTaskManager
                 {
                     foreach (User user in item.Responsible)
                     {
-                        sw.Write($"{user.Id}, {user.Name},{user.Surname},{user.Email}|\n");
+                        sw.Write($"{user.Id}, {user.Name},{user.Surname},{user.Email}|");
                     }
+                    sw.Write("\n");
                 }
                 else
                 {

@@ -13,7 +13,7 @@ namespace ClassTaskManager
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
         public DateTime СreationDate { get; set; }
-        private string status = "В работе";
+        private string status = "Свободная";
         public string Status 
         {
             get
