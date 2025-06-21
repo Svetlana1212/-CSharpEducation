@@ -51,13 +51,20 @@ namespace ClassTaskManager
             }
             return true;
         }
-        
+        public static void deadlineСheck(WorkTask task)
+        {
+            int result = DateTime.Compare(DateTime.Today, task.Deadline);
+            if (result > 0) 
+            {
+                task.Status = "Просрочена";
+            }
+        }
         public static List<WorkTask> List(User user)
         {
             List<WorkTask> myTasks = new List<WorkTask>();
             foreach (WorkTask task in tasks)
             {
-               
+                deadlineСheck(task);
                 if (user.Role == "admin")
                 {      
                     myTasks.Add(task);
@@ -77,20 +84,79 @@ namespace ClassTaskManager
             
             return myTasks;
         }
-        public static WorkTask SearchTask(string name)
+        public static bool AddTask()
         {
-            return tasks[0];
-        }
-        public static bool Update(WorkTask task, DateTime deadline, string name = null, string description = null, string status = null)
-        {
-            task.Deadline = deadline;
-            task.Name = name;
-            task.Description = description;
-            task.Status = status;
+            Console.Write("Введите название задачи: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Введите описание задачи: ");
+            string description = Console.ReadLine();
+
+            Console.Write("Введите срок выполнения задачи (ДД.ММ.ГГГГ): ");
+            DateTime deadline = Convert.ToDateTime(Console.ReadLine());
+
+            Console.Write("Укажите приоритет ('Обычный' / 'Срочный'): ");
+            string priority = Console.ReadLine();
+
+            WorkTask newWorkTask = new WorkTask(name, description, deadline)
+            {
+                Id = tasks.Count + 1,
+                СreationDate = DateTime.Today
+            };
+            newWorkTask.Priority = priority;
+            newWorkTask.Status = "Свободная";
+            tasks.Add(newWorkTask);
+            WriteDown();
+            Console.WriteLine($"Задача успешно поставлена!");
             return true;
         }
-        
-       
+        public static WorkTask SearchTask(string name)
+        {
+            WorkTask SearchTask= new WorkTask(null,null,DateTime.Now);
+            foreach(WorkTask task in tasks)
+            {
+                if (task.Name == name)
+                {
+                    SearchTask = task;
+                }
+                
+            }
+            return SearchTask;
+        }
+        public static bool Update()
+        {
+            Console.Write("Введите название задачи: ");
+            string name = Console.ReadLine();
+            WorkTask task = SearchTask(name);
+            Console.Write("Введите описание задачи: ");
+            task.Description = Console.ReadLine();
+            Console.Write("Введите срок выполнения задачи (ДД.ММ.ГГГГ): ");
+            DateTime deadline = Convert.ToDateTime(Console.ReadLine());
+            task.Deadline = deadline;
+            Console.Write("Укажите приоритет ('Обычный' / 'Срочный'): ");
+            task.Priority = Console.ReadLine();
+            Console.Write("Укажите статус ('Свободная' / 'Назначен ответственный'/'В обсуждении'/'В работе'/'Выполнена'/'Закрыта'): ");
+            task.Status = Console.ReadLine();
+            WriteDown();
+            Console.WriteLine($"Задача успешно отредактирована!");
+            return true;
+        }
+        public static bool DeleteTask()
+        {
+            Console.WriteLine("Введите наименование задачи: ");
+            string name = Console.ReadLine();
+            WorkTask task = SearchTask(name);
+            tasks.Remove(task);
+            WriteDown();
+            //if (WriteDown())
+            //{
+                Console.WriteLine($"Задача успешно удалена!");
+                return true;
+            //}
+           // return false;
+        }
+
+
         public static bool Sort(List<WorkTask> works, string sort)
         {
             if(sort=="Name")
@@ -127,11 +193,11 @@ namespace ClassTaskManager
                 {
                     filter = (task.Priority == meaning) ? true : false;
                 }
-                else if (condition == "responsibleSurname")
+                /*else if (condition == "responsibleSurname")
                 {
                     User found = task.Responsible.Find(item => item.Surname == meaning);                    
                     filter = (found!=null) ? true : false;
-                }
+                }*/
                 else if (condition == "responsibleId")
                 {
                     
@@ -205,10 +271,26 @@ namespace ClassTaskManager
         
         public static bool AddResponsible(WorkTask task, User user)
         {
-            task.Responsible.Add(user);
-            task.Status = "назначен ответственный";
-            //SendMessage(task, user);
-            return true;
+            User found = task.Responsible.Find(item => item.Id == user.Id);
+            bool res=false;
+            if (found==null) 
+            {
+                task.Responsible.Add(user);
+                if (task.Status == "Свободная") 
+                {
+                    task.Status = "назначен ответственный";
+                }
+                if (WriteDown())
+                {
+                    res=true;
+                }
+            }                
+            else 
+            {
+                Console.WriteLine("Пользователь уже назначен ответственным для этой задачи");                
+            }
+            return res;
+                //SendMessage(task, user);               
         }
         public static bool DelAllResponsible(WorkTask task)
         {
@@ -227,7 +309,7 @@ namespace ClassTaskManager
                 Console.Write($"Срок выполнения: {task.Deadline} ");
                 Console.Write($"Статус: {task.Status} ");
                 Console.WriteLine($"Приоритет: {task.Priority}");
-                if (task.Status != "Cвободная")
+                if (task.Status!="Свободная")
                 {
                     Console.Write("Ответственные: ");
                     foreach (User item in task.Responsible)
