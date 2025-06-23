@@ -16,9 +16,9 @@ namespace ClassTaskManager
         {
             return true;
         }
-        public static bool Search()
+        public static void Search()
         {
-            return true;
+            
         }
         public static bool Update()
         {

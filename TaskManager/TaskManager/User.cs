@@ -18,6 +18,7 @@ namespace ClassTaskManager
         public string Role {  get; set; }
         public User(string name,string surname,string email)
         {
+            
             this.Name = name;
             this.Surname = surname;
             this.Email = email;
